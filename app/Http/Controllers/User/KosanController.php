@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Kosan;
 
 class KosanController extends Controller
 {
@@ -13,7 +14,7 @@ class KosanController extends Controller
             ->where('kamar_tersedia', '>', 0)
             ->with(['fotoUtama', 'ulasans'])
             ->latest()->paginate(12);
-        return view('pencari.home', compact('kosans'));
+        return view('user.home', compact('kosans'));
     }
 
     public function search(Request $request)
@@ -30,6 +31,6 @@ class KosanController extends Controller
             }))
             ->with('fotoUtama')
             ->paginate(12);
-        return view('pencari.search', compact('kosans'));
+        return view('user.search', compact('kosans'));
     }
 }

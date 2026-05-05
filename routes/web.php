@@ -3,12 +3,12 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Pemilik\KosanController as PemilikKosanController;
 use App\Http\Controllers\Pemilik\PemesananController as PemilikPemesananController;
-use App\Http\Controllers\Pencari\KosanController as PencariKosanController;
-use App\Http\Controllers\Pencari\PemesananController as PencariPemesananController;
+use App\Http\Controllers\User\KosanController as UserKosanController;
+use App\Http\Controllers\User\PemesananController as UserPemesananController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return Auth::check() ? redirect()->route('home') : view('auth.choose');
+})->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -22,9 +22,9 @@ Route::middleware('auth')->group(function () {
 
 
 // Public
-Route::get('/', [PencariKosanController::class, 'index'])->name('home');
-Route::get('/kosan/{kosan}', [PencariKosanController::class, 'show'])->name('kosan.show');
-Route::get('/kosan', [PencariKosanController::class, 'search'])->name('kosan.search');
+Route::get('/', [UserKosanController::class, 'index'])->name('home');
+Route::get('/kosan/{kosan}', [UserKosanController::class, 'show'])->name('kosan.show');
+Route::get('/kosan', [UserKosanController::class, 'search'])->name('kosan.search');
 
 // Pemilik Kosan
 Route::middleware(['auth', 'role:pemilik'])->prefix('pemilik')->name('pemilik.')->group(function () {
@@ -35,11 +35,11 @@ Route::middleware(['auth', 'role:pemilik'])->prefix('pemilik')->name('pemilik.')
     Route::patch('pemesanan/{pemesanan}/tolak', [PemilikPemesananController::class, 'tolak'])->name('pemesanan.tolak');
 });
 
-// Pencari Kosan
-Route::middleware(['auth', 'role:pencari'])->prefix('pencari')->name('pencari.')->group(function () {
-    Route::get('/dashboard', [PencariPemesananController::class, 'dashboard'])->name('dashboard');
-    Route::resource('pemesanan', PencariPemesananController::class);
-    Route::post('/kosan/{kosan}/ulasan', [PencariKosanController::class, 'ulasan'])->name('kosan.ulasan');
+// User Kosan
+Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
+    Route::get('/dashboard', [UserPemesananController::class, 'dashboard'])->name('dashboard');
+    Route::resource('pemesanan', UserPemesananController::class);
+    Route::post('/kosan/{kosan}/ulasan', [UserKosanController::class, 'ulasan'])->name('kosan.ulasan');
 });
 
 require __DIR__.'/auth.php';

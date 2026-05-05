@@ -22,7 +22,7 @@ class User extends Authenticatable
 
     // Cek role
     public function isPemilik(): bool { return $this->role === 'pemilik'; }
-    public function isPencari(): bool { return $this->role === 'pencari'; }
+    public function isUser(): bool { return $this->role === 'user'; }
 
     // Relasi
     public function kosans() { return $this->hasMany(Kosan::class); }
