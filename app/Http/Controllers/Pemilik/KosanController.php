@@ -13,8 +13,17 @@ class KosanController extends Controller
 {
     public function dashboard()
     {
-        $totalKosan = Kosan::where('user_id', Auth::id())->count();
-        return view('pemilik.dashboard', compact('totalKosan'));
+        $kosanIds = Kosan::where('user_id', Auth::id())->pluck('id');
+
+        $totalKosan          = $kosanIds->count();
+        $totalKamarTersedia  = Kosan::whereIn('id', $kosanIds)->sum('kamar_tersedia');
+        $totalPemesanan      = \App\Models\Pemesanan::whereIn('kosan_id', $kosanIds)->count();
+        $pemesananPending    = \App\Models\Pemesanan::whereIn('kosan_id', $kosanIds)->where('status', 'pending')->count();
+        $kosanTerbaru        = Kosan::where('user_id', Auth::id())->with('fotoUtama')->latest()->take(8)->get();
+
+        return view('pemilik.dashboard', compact(
+            'totalKosan', 'totalKamarTersedia', 'totalPemesanan', 'pemesananPending', 'kosanTerbaru'
+        ));
     }
 
     public function index()

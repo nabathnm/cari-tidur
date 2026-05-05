@@ -1,30 +1,41 @@
 <?php
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Pemilik\KosanController as PemilikKosanController;
 use App\Http\Controllers\Pemilik\PemesananController as PemilikPemesananController;
 use App\Http\Controllers\User\KosanController as UserKosanController;
 use App\Http\Controllers\User\PemesananController as UserPemesananController;
 
+// Halaman utama: tampilkan choose jika tamu, redirect ke home jika sudah login
 Route::get('/', function () {
-    return Auth::check() ? redirect()->route('home') : view('auth.choose');
+    if (Auth::check()) {
+        return Auth::user()->role === 'pemilik'
+            ? redirect()->route('pemilik.dashboard')
+            : redirect()->route('home');
+    }
+    return view('auth.choose');
 })->name('welcome');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Beranda publik (daftar kosan)
+Route::get('/home', [UserKosanController::class, 'index'])->name('home');
+Route::get('/kosan', [UserKosanController::class, 'search'])->name('kosan.search');
+Route::get('/kosan/{kosan}', [UserKosanController::class, 'show'])->name('kosan.show');
 
+// Dashboard umum (tidak dipakai lagi, redirect sesuai role)
+Route::get('/dashboard', function () {
+    if (Auth::user()->role === 'pemilik') {
+        return redirect()->route('pemilik.dashboard');
+    }
+    return redirect()->route('home');
+})->middleware(['auth'])->name('dashboard');
+
+// Profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-
-// Public
-Route::get('/', [UserKosanController::class, 'index'])->name('home');
-Route::get('/kosan/{kosan}', [UserKosanController::class, 'show'])->name('kosan.show');
-Route::get('/kosan', [UserKosanController::class, 'search'])->name('kosan.search');
 
 // Pemilik Kosan
 Route::middleware(['auth', 'role:pemilik'])->prefix('pemilik')->name('pemilik.')->group(function () {
@@ -35,7 +46,7 @@ Route::middleware(['auth', 'role:pemilik'])->prefix('pemilik')->name('pemilik.')
     Route::patch('pemesanan/{pemesanan}/tolak', [PemilikPemesananController::class, 'tolak'])->name('pemesanan.tolak');
 });
 
-// User Kosan
+// User / Pencari Kosan
 Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [UserPemesananController::class, 'dashboard'])->name('dashboard');
     Route::resource('pemesanan', UserPemesananController::class);

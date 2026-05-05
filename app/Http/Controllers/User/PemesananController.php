@@ -10,6 +10,16 @@ class PemesananController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function dashboard()
+    {
+        $pemesanans = \App\Models\Pemesanan::where('user_id', auth()->id())
+            ->with('kosan')
+            ->latest()
+            ->get();
+
+        return view('user.dashboard', compact('pemesanans'));
+    }
+
     public function index()
     {
         //

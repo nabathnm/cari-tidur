@@ -15,74 +15,32 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <style>
-            body { font-family: 'Inter', sans-serif; }
-            .auth-gradient {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            }
-            .glass-card {
-                background: rgba(255,255,255,0.97);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-            }
-            .input-focus:focus {
-                border-color: #667eea;
-                box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
-                outline: none;
-            }
+            body { font-family: 'Inter', sans-serif; background: #f8fafc; }
         </style>
     </head>
     <body class="antialiased">
-        <div class="min-h-screen flex auth-gradient">
+        <div class="min-h-screen flex flex-col items-center justify-center px-4 py-12"
+             style="background: linear-gradient(160deg, #f0fdf4 0%, #f8fafc 50%, #eff6ff 100%);">
 
-            <!-- Left Panel — Branding -->
-            <div class="hidden lg:flex lg:w-1/2 flex-col items-center justify-center px-16 text-white">
-                <div class="max-w-md text-center">
-                    <div class="w-20 h-20 bg-white/20 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M3 9.75L12 4l9 5.75V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.75z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 21V12h6v9"/>
-                        </svg>
-                    </div>
-                    <h1 class="text-5xl font-extrabold mb-4 tracking-tight">CariTidur</h1>
-                    <p class="text-xl text-white/80 leading-relaxed mb-10">
-                        Platform terpercaya untuk menemukan & mengelola kosan dengan mudah.
-                    </p>
-                    <div class="grid grid-cols-3 gap-6 text-center">
-                        <div class="bg-white/10 rounded-2xl p-4">
-                            <div class="text-3xl font-bold">500+</div>
-                            <div class="text-sm text-white/70 mt-1">Kosan Tersedia</div>
-                        </div>
-                        <div class="bg-white/10 rounded-2xl p-4">
-                            <div class="text-3xl font-bold">10K+</div>
-                            <div class="text-sm text-white/70 mt-1">Pengguna Aktif</div>
-                        </div>
-                        <div class="bg-white/10 rounded-2xl p-4">
-                            <div class="text-3xl font-bold">50+</div>
-                            <div class="text-sm text-white/70 mt-1">Kota</div>
-                        </div>
-                    </div>
+            <!-- Logo / Brand -->
+            <a href="{{ url('/') }}" class="flex items-center gap-3 mb-8 group">
+                <div class="w-11 h-11 rounded-2xl flex items-center justify-center shadow-sm"
+                     style="background: linear-gradient(135deg, #16a34a, #15803d);">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2.2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 4l9 5.75V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.75z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9"/>
+                    </svg>
                 </div>
+                <span class="text-xl font-bold text-gray-800 group-hover:text-green-700 transition-colors">CariTidur</span>
+            </a>
+
+            <!-- Card -->
+            <div class="w-full max-w-md bg-white rounded-3xl shadow-lg border border-gray-100 px-8 py-9">
+                {{ $slot }}
             </div>
 
-            <!-- Right Panel — Form -->
-            <div class="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 bg-gray-50">
-                <div class="glass-card w-full max-w-md rounded-3xl shadow-2xl px-8 py-10">
-                    <!-- Mobile Logo -->
-                    <div class="lg:hidden flex items-center gap-3 mb-8">
-                        <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M3 9.75L12 4l9 5.75V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.75z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 21V12h6v9"/>
-                            </svg>
-                        </div>
-                        <span class="text-xl font-bold text-gray-800">CariTidur</span>
-                    </div>
-
-                    {{ $slot }}
-                </div>
-            </div>
+            <!-- Footer note -->
+            <p class="text-xs text-gray-400 mt-6">© {{ date('Y') }} CariTidur. Semua hak dilindungi.</p>
         </div>
     </body>
 </html>
