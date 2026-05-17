@@ -32,6 +32,11 @@
                                       {{ request()->routeIs('pemilik.kosan.*') ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50' }}">
                                 Kelola Kosan
                             </a>
+                            <a href="{{ route('pemilik.pemesanan.index') }}"
+                               class="px-3 py-1.5 rounded-lg text-sm font-medium transition
+                                       {{ request()->routeIs('pemilik.pemesanan.*') ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50' }}">
+                                Pemesanan
+                            </a>
                         @else
                             <a href="{{ route('user.dashboard') }}"
                                class="px-3 py-1.5 rounded-lg text-sm font-medium transition
@@ -104,6 +109,7 @@
                 @if(Auth::user()->role === 'pemilik')
                     <a href="{{ route('pemilik.dashboard') }}" class="block px-3 py-2 text-sm rounded-lg text-gray-700">Dashboard</a>
                     <a href="{{ route('pemilik.kosan.index') }}" class="block px-3 py-2 text-sm rounded-lg text-gray-700">Kelola Kosan</a>
+                    <a href="{{ route('pemilik.pemesanan.index') }}" class="block px-3 py-2 text-sm rounded-lg text-gray-700">Pemesanan</a>
                 @else
                     <a href="{{ route('user.dashboard') }}" class="block px-3 py-2 text-sm rounded-lg text-gray-700">Pesanan Saya</a>
                 @endif

@@ -5,9 +5,26 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kosan;
+use Illuminate\Support\Facades\Auth;
 
 class KosanController extends Controller
 {
+    public function show(Kosan $kosan)
+    {
+        $kosan->load(['fotos', 'pemilik', 'ulasans.user']);
+
+        $ratingRata = $kosan->ulasans->avg('rating');
+        $totalUlasan = $kosan->ulasans->count();
+
+        // Cek apakah user sudah pernah memberi ulasan
+        $sudahUlasan = false;
+        if (Auth::check()) {
+            $sudahUlasan = $kosan->ulasans->where('user_id', Auth::id())->isNotEmpty();
+        }
+
+        return view('user.show', compact('kosan', 'ratingRata', 'totalUlasan', 'sudahUlasan'));
+    }
+
     public function index()
     {
         $kosans = Kosan::where('status', 'aktif')
