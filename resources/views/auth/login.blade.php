@@ -336,9 +336,6 @@
             <div class="kos-field">
                 <div class="kos-pw-row">
                     <label for="password" class="kos-label" style="margin-bottom:0;">Password</label>
-                    @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" class="kos-forgot">Lupa password?</a>
-                    @endif
                 </div>
                 <div class="kos-input-wrap">
                     <input id="password" type="password" name="password"
