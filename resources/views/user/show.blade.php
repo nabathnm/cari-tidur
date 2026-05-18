@@ -10,7 +10,22 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-1xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            {{-- Flash Messages --}}
+            @if(session('success'))
+                <div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl text-sm flex items-center gap-2 shadow-sm">
+                    <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm shadow-sm">
+                    {{ session('error') }}
+                </div>
+            @endif
 
             {{-- Galeri Foto --}}
             <div x-data="{ active: 0 }" class="mb-8">
@@ -188,44 +203,49 @@
 
                         {{-- Form Ulasan --}}
                         @auth
-                            @if(Auth::user()->role === 'user' && !$sudahUlasan)
-                                <div class="mt-6 pt-5 border-t border-gray-100">
-                                    <h3 class="text-sm font-semibold text-gray-700 mb-3">Tulis Ulasan</h3>
-                                    <form action="{{ route('user.kosan.ulasan', $kosan) }}" method="POST" class="space-y-3">
-                                        @csrf
-                                        <div x-data="{ rating: 0, hover: 0 }">
-                                            <label class="text-xs text-gray-500 mb-1 block">Rating</label>
-                                            <div class="flex gap-1">
-                                                @for($i = 1; $i <= 5; $i++)
-                                                    <button type="button" @click="rating = {{ $i }}" @mouseenter="hover = {{ $i }}"
-                                                        @mouseleave="hover = 0"
-                                                        class="focus:outline-none transition-transform hover:scale-110">
-                                                        <svg class="w-6 h-6 transition-colors"
-                                                            :class="(hover || rating) >= {{ $i }} ? 'text-yellow-400' : 'text-gray-200'"
-                                                            fill="currentColor" viewBox="0 0 20 20">
-                                                            <path
-                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                        </svg>
-                                                    </button>
-                                                @endfor
+                            @if(Auth::user()->role === 'user')
+                                @if($sudahUlasan)
+                                    <p class="mt-4 text-xs text-gray-400 text-center">✅ Kamu sudah memberikan ulasan untuk kosan ini.</p>
+                                @elseif($bisaUlas)
+                                    <div class="mt-6 pt-5 border-t border-gray-100">
+                                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Tulis Ulasan</h3>
+                                        <form action="{{ route('user.kosan.ulasan', $kosan) }}" method="POST" class="space-y-3">
+                                            @csrf
+                                            <div x-data="{ rating: 0, hover: 0 }">
+                                                <label class="text-xs text-gray-500 mb-1 block">Rating</label>
+                                                <div class="flex gap-1">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        <button type="button" @click="rating = {{ $i }}" @mouseenter="hover = {{ $i }}"
+                                                            @mouseleave="hover = 0"
+                                                            class="focus:outline-none transition-transform hover:scale-110">
+                                                            <svg class="w-6 h-6 transition-colors"
+                                                                :class="(hover || rating) >= {{ $i }} ? 'text-yellow-400' : 'text-gray-200'"
+                                                                fill="currentColor" viewBox="0 0 20 20">
+                                                                <path
+                                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                            </svg>
+                                                        </button>
+                                                    @endfor
+                                                </div>
+                                                <input type="hidden" name="rating" :value="rating">
                                             </div>
-                                            <input type="hidden" name="rating" :value="rating">
-                                        </div>
-                                        <div>
-                                            <label class="text-xs text-gray-500 mb-1 block">Komentar</label>
-                                            <textarea name="komentar" rows="3" placeholder="Bagikan pengalamanmu..."
-                                                class="w-full rounded-xl border border-gray-200 text-sm px-4 py-2.5 focus:ring-2 focus:ring-green-400 focus:border-transparent resize-none"></textarea>
-                                        </div>
-                                        <button type="submit"
-                                            class="px-5 py-2 text-sm font-semibold text-white rounded-xl transition hover:shadow-md"
-                                            style="background:linear-gradient(135deg,#16a34a,#15803d)">
-                                            Kirim Ulasan
-                                        </button>
-                                    </form>
-                                </div>
-                            @elseif(Auth::user()->role === 'user' && $sudahUlasan)
-                                <p class="mt-4 text-xs text-gray-400 text-center">✅ Kamu sudah memberikan ulasan untuk kosan
-                                    ini.</p>
+                                            <div>
+                                                <label class="text-xs text-gray-500 mb-1 block">Komentar</label>
+                                                <textarea name="komentar" rows="3" placeholder="Bagikan pengalamanmu..."
+                                                    class="w-full rounded-xl border border-gray-200 text-sm px-4 py-2.5 focus:ring-2 focus:ring-green-400 focus:border-transparent resize-none"></textarea>
+                                            </div>
+                                            <button type="submit"
+                                                class="px-5 py-2 text-sm font-semibold text-white rounded-xl transition hover:shadow-md"
+                                                style="background:linear-gradient(135deg,#16a34a,#15803d)">
+                                                Kirim Ulasan
+                                            </button>
+                                        </form>
+                                    </div>
+                                @else
+                                    <div class="mt-6 pt-5 border-t border-gray-100">
+                                        <p class="text-sm text-gray-500 text-center">🔒 Anda baru bisa memberikan ulasan setelah melakukan pemesanan dan disetujui oleh pemilik kosan.</p>
+                                    </div>
+                                @endif
                             @endif
                         @endauth
                     </div>
