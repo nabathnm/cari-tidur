@@ -112,9 +112,6 @@
             @else
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
                     <div class="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
                     </div>
                     <h3 class="font-bold text-gray-800 text-lg mb-1">Belum Ada Pemesanan</h3>
                     <p class="text-sm text-gray-500">Belum ada pengguna yang mengajukan pemesanan untuk kosan Anda.</p>
