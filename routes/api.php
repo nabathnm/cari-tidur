@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\KosanApiController;
 use App\Http\Controllers\Api\PemesananApiController;
+use App\Http\Controllers\Api\UlasanApiController;
 
 // =====================
 // PUBLIC ROUTES
@@ -33,4 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/pemesanan', [PemesananApiController::class, 'store']);
     Route::get('/pemesanan/{id}', [PemesananApiController::class, 'show']);
     Route::delete('/pemesanan/{id}', [PemesananApiController::class, 'destroy']);
+
+    // CRUD Ulasan
+    Route::post('/kosan/{id}/ulasan', [UlasanApiController::class, 'store']);
 });
